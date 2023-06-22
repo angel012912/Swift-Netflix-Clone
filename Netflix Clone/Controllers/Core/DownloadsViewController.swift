@@ -69,4 +69,23 @@ extension DownloadsViewController: UITableViewDelegate, UITableViewDataSource{
         return 140
     }
     
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        switch editingStyle {
+        case .delete:
+            DataPersistanceManager.shared.deleteTitle(model: titles[indexPath.row]) { [weak self] result in
+                switch result{
+                case .success():
+                    self?.titles.remove(at: indexPath.row)
+                    tableView.deleteRows(at: [indexPath], with: .fade)
+                    print("Deleted")
+                case .failure(let error):
+                    print(error.localizedDescription)
+                }
+            }
+        default:
+            break;
+        }
+    }
+    
+    
 }
